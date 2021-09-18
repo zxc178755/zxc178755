@@ -77,5 +77,14 @@ public class TXtest
         File file = new File(this.outputPath);
         assertTrue(file.exists());
     }
+    @Test
+    public void testFilenotfound() throws Exception{
+        try {
+            TextCheck textCheck = new TextCheck("0", "1", "3");
+        }catch (Exception e){
+            throw new Exception("wrong");
+        }
+
+    }
 
 }
