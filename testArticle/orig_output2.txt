@@ -1,3 +1,0 @@
-源文件：testArticle/orig.txt
-对比文件：testArticle/orig_0.8_add.txt
-文本相似度：0.99

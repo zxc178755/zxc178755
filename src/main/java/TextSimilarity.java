@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -7,95 +6,97 @@ import java.util.List;
 import java.util.logging.Logger;
 
 class TextCheck {
-    List<String> Article1;//Ô­ÎÄÕÂ
-    List<String> Article2;//¶Ô±ÈÎÄÕÂ
-    private String path1; //Ô­ÎÄÕÂÄ¿Â¼
-    private String path2;//¶Ô±ÈÎÄÕÂÄ¿Â¼
-    private String outputPath;//Êä³öÎÄ¼şÄ¿Â¼
     private static final Logger logger = Logger.getLogger("TextCheck");
+    List<String> Article1;//åŸæ–‡ç« 
+    List<String> Article2;//å¯¹æ¯”æ–‡ç« 
+    private String path1; //åŸæ–‡ç« ç›®å½•
+    private String path2;//å¯¹æ¯”æ–‡ç« ç›®å½•
+    private String outputPath;//è¾“å‡ºæ–‡ä»¶ç›®å½•
 
-    public TextCheck(String path1,String path2,String outputPath){
-        Article1=new ArrayList<>();
-        Article2=new ArrayList<>();
-        this.path1= path1;
-        this.path2= path2;
-        this.outputPath= outputPath;
+    public TextCheck(String path1, String path2, String outputPath) {
+        Article1 = new ArrayList<>();
+        Article2 = new ArrayList<>();
+        this.path1 = path1;
+        this.path2 = path2;
+        this.outputPath = outputPath;
 
         /**
-         * °ÑÎÄÕÂ´æ·Åµ½ArrayListÖĞ
+         * æŠŠæ–‡ç« å­˜æ”¾åˆ°ArrayListä¸­
          */
-        AddList(path1,Article1);
-        AddList(path2,Article2);
+        AddList(path1, Article1);
+        AddList(path2, Article2);
 
-        CosSimilarity cos=new CosSimilarity();
-        cos.textSegment(Article1,0);
-        cos.textSegment(Article2,1);
+        CosSimilarity cos = new CosSimilarity();
+        cos.textSegment(Article1, 0);
+        cos.textSegment(Article2, 1);
 
 
         /**
-         * Êä³öÎÄ¼ş
+         * è¾“å‡ºæ–‡ä»¶
          */
         OutputFile(Similarity(cos.calculateCos()));
 
     }
 
-    private void AddList(String path,List<String> list){
-        try(FileInputStream fis = new FileInputStream(path);
-            InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-            BufferedReader br = new BufferedReader(isr);){
+
+
+    private void AddList(String path, List<String> list) {
+        try (FileInputStream fis = new FileInputStream(path);
+             InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+             BufferedReader br = new BufferedReader(isr);) {
 
             String line;
             /*
-             * ¶ÁÈ¡µ¥ĞĞÎÄ±¾
+             * è¯»å–å•è¡Œæ–‡æœ¬
              * */
-            while ((line=br.readLine())!=null){
+            while ((line = br.readLine()) != null) {
                 line = FilterSentence(line);
-                if(!line.isEmpty()){
+                if (!line.isEmpty()) {
                     list.add(line);
                 }
             }
 
-        }catch (IOException e){
-            e.printStackTrace();//Å×³öÒì³£
+        } catch (IOException e) {
+            e.printStackTrace();//æŠ›å‡ºå¼‚å¸¸
         }
     }
 
     /**
-     * ¹ıÂË×Ö·û´®
-     * @param sentence ĞèÒª¹ıÂË×Ö·û´®
-     * @return ¹ıÂËºó
+     * è¿‡æ»¤å­—ç¬¦ä¸²
+     *
+     * @param sentence éœ€è¦è¿‡æ»¤å­—ç¬¦ä¸²
+     * @return è¿‡æ»¤å
      */
-    protected String FilterSentence(String sentence){
-        sentence =sentence.trim();//¹ıÂËÇ°ºó¿Õ¸ñ
+    protected String FilterSentence(String sentence) {
+        sentence = sentence.trim();//è¿‡æ»¤å‰åç©ºæ ¼
         return sentence;
     }
 
     /**
-     * µÃµ½ÏàËÆ¶È±ùÈ¡Ğ¡ÊıµãºóÁ½Î»
+     * å¾—åˆ°ç›¸ä¼¼åº¦å†°å–å°æ•°ç‚¹åä¸¤ä½
+     *
      * @return
      */
-    public String Similarity(Double cos){
-        return "0"+new DecimalFormat("#.000").format(cos).substring(0,3);
+    public String Similarity(Double cos) {
+        return "0" + new DecimalFormat("#.000").format(cos).substring(0, 3);
 //        return null;
     }
 
-    protected void OutputFile(String similarity){
+    protected void OutputFile(String similarity) {
         File outPutFile = new File(outputPath);
-        try(FileOutputStream fos = new FileOutputStream(outPutFile);
-            PrintWriter pw = new PrintWriter(fos);)
-        {
-            pw.write("Ô´ÎÄ¼ş£º"+path1+"\r\n");
-            pw.write("¶Ô±ÈÎÄ¼ş£º"+path2+"\r\n");
-            pw.write("ÎÄ±¾ÏàËÆ¶È£º"+similarity);
+        try (FileOutputStream fos = new FileOutputStream(outPutFile);
+             PrintWriter pw = new PrintWriter(fos);) {
+            pw.write("æºæ–‡ä»¶ï¼š" + path1 + "\r\n");
+            pw.write("å¯¹æ¯”æ–‡ä»¶ï¼š" + path2 + "\r\n");
+            pw.write("æ–‡æœ¬ç›¸ä¼¼åº¦ï¼š" + similarity);
             pw.flush();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        new TextCheck("testArticle/orig.txt", "testArticle/orig_0.8_add.txt","testArticle/orig_output2.txt");
+        new TextCheck("testArticle/orig.txt", "testArticle/orig_0.8_dis_15.txt", "testArticle/orig_output.txt");
     }
+
 }

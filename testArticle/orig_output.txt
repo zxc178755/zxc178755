@@ -1,3 +1,3 @@
-婧愭枃浠讹細testArticle\orig.txt
-瀵规瘮鏂囦欢锛歵estArticle\orig_0.8_dis_15.txt
-鏂囨湰鐩镐技搴︼細0.94
+源文件：testArticle\orig.txt
+对比文件：testArticle\orig_0.8_dis_15.txt
+文本相似度：0.94
